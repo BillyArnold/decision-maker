@@ -147,3 +147,48 @@ export async function deleteOutcome(decisionId: string, outcomeId: string) {
 
   return { success: true };
 } 
+
+export async function updateOutcomeRatings(decisionId: string, ratings: Record<string, Record<string, number>>) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated');
+  }
+
+  // Ensure the decision belongs to the user
+  const decision = await prisma.decision.findUnique({
+    where: { id: decisionId, userId: session.user.id },
+  });
+  if (!decision) {
+    throw new Error('Decision not found');
+  }
+
+  // Update or create each rating
+  const ratingPromises = Object.entries(ratings).flatMap(([outcomeId, factorRatings]) =>
+    Object.entries(factorRatings).map(([factorId, rating]) =>
+      prisma.outcomeRating.upsert({
+        where: {
+          outcomeId_factorId: {
+            outcomeId,
+            factorId,
+          },
+        },
+        update: {
+          rating,
+        },
+        create: {
+          rating,
+          outcomeId,
+          factorId,
+        },
+      })
+    )
+  );
+
+  await Promise.all(ratingPromises);
+
+  // Revalidate the rating page and decision page
+  revalidatePath(`/decisions/${decisionId}/rate`);
+  revalidatePath(`/decisions/${decisionId}`);
+
+  return { success: true };
+} 

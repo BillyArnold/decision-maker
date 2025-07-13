@@ -95,6 +95,25 @@ export default function OutcomesList({ outcomes }: OutcomesListProps) {
           </Button>
         )}
       </div>
+
+      {/* Next Step Button */}
+      <div className="mt-8 pt-6 border-t border-gray-border">
+        {outcomes.length >= 1 ? (
+          <div className="flex justify-end">
+            <a href={`/decisions/${params.id}/rate`}>
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                Next: Rate Outcomes
+              </Button>
+            </a>
+          </div>
+        ) : (
+          <div className="text-center">
+            <p className="text-gray-text text-sm">
+              Add at least one outcome to proceed to rating
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 } 

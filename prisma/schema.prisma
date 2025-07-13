@@ -79,6 +79,7 @@ model Factor {
   updatedAt  DateTime @updatedAt
   decisionId String
   decision   Decision @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+  ratings    OutcomeRating[]
 }
 
 model Outcome {
@@ -88,4 +89,18 @@ model Outcome {
   updatedAt  DateTime @updatedAt
   decisionId String
   decision   Decision @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+  ratings    OutcomeRating[]
+}
+
+model OutcomeRating {
+  id         String   @id @default(cuid())
+  rating     Int      // 1-5 scale for how strongly outcome resonates with factor
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  outcomeId  String
+  outcome    Outcome  @relation(fields: [outcomeId], references: [id], onDelete: Cascade)
+  factorId   String
+  factor     Factor   @relation(fields: [factorId], references: [id], onDelete: Cascade)
+
+  @@unique([outcomeId, factorId])
 }
