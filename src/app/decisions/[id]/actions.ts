@@ -58,4 +58,37 @@ export async function deleteFactor(decisionId: string, factorId: string) {
   revalidatePath(`/decisions/${decisionId}`);
 
   return { success: true };
+}
+
+export async function updateFactorWeights(decisionId: string, weights: Record<string, number>) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated');
+  }
+
+  // Ensure the decision belongs to the user
+  const decision = await prisma.decision.findUnique({
+    where: { id: decisionId, userId: session.user.id },
+  });
+  if (!decision) {
+    throw new Error('Decision not found');
+  }
+
+  // Update each factor's weight
+  const updatePromises = Object.entries(weights).map(([factorId, weight]) =>
+    prisma.factor.update({
+      where: { 
+        id: factorId,
+        decisionId: decisionId, // Ensure the factor belongs to this decision
+      },
+      data: { weight }
+    })
+  );
+
+  await Promise.all(updatePromises);
+
+  // Revalidate the decision page
+  revalidatePath(`/decisions/${decisionId}`);
+
+  return { success: true };
 } 

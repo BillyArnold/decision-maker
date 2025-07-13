@@ -47,10 +47,16 @@ export default async function DecisionPage({ params }: DecisionPageProps) {
             <Heading size="lg">{decision.title}</Heading>
             <p className="text-gray-text mt-2">Status: {decision.status}</p>
           </div>
-          <Button size="sm" className="flex items-center gap-2">
-            <span className="text-lg">+</span>
-            Add Factor
-          </Button>
+          <div className="flex gap-2">
+            {decision.factors && decision.factors.length > 0 && (
+              <a href={`/decisions/${params.id}/weigh`}>
+                <Button size="sm" className="flex items-center gap-2">
+                  <span className="text-lg">⚖️</span>
+                  Weigh factors
+                </Button>
+              </a>
+            )}
+          </div>
         </div>
 
         {/* Factors List */}
