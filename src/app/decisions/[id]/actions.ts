@@ -92,3 +92,58 @@ export async function updateFactorWeights(decisionId: string, weights: Record<st
 
   return { success: true };
 } 
+
+export async function addOutcome(decisionId: string, text: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated');
+  }
+
+  // Ensure the decision belongs to the user
+  const decision = await prisma.decision.findUnique({
+    where: { id: decisionId, userId: session.user.id },
+  });
+  if (!decision) {
+    throw new Error('Decision not found');
+  }
+
+  const outcome = await prisma.outcome.create({
+    data: {
+      text: text.trim(),
+      decisionId: decisionId,
+    },
+  });
+
+  // Revalidate the outcomes page
+  revalidatePath(`/decisions/${decisionId}/outcomes`);
+
+  return outcome;
+}
+
+export async function deleteOutcome(decisionId: string, outcomeId: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated');
+  }
+
+  // Ensure the decision belongs to the user
+  const decision = await prisma.decision.findUnique({
+    where: { id: decisionId, userId: session.user.id },
+  });
+  if (!decision) {
+    throw new Error('Decision not found');
+  }
+
+  // Delete the outcome
+  await prisma.outcome.delete({
+    where: { 
+      id: outcomeId,
+      decisionId: decisionId, // Ensure the outcome belongs to this decision
+    },
+  });
+
+  // Revalidate the outcomes page
+  revalidatePath(`/decisions/${decisionId}/outcomes`);
+
+  return { success: true };
+} 

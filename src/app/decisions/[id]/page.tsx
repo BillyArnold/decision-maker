@@ -38,6 +38,9 @@ export default async function DecisionPage({ params }: DecisionPageProps) {
     notFound();
   }
 
+  // Check if all factors have weights
+  const allFactorsWeighted = decision.factors.length > 0 && decision.factors.every((factor: any) => factor.weight !== null);
+
   return (
     <main className="font-sans bg-white min-h-screen">
       <div className="max-w-4xl mx-auto px-6 py-8">
@@ -61,6 +64,18 @@ export default async function DecisionPage({ params }: DecisionPageProps) {
 
         {/* Factors List */}
         <FactorsList factors={decision.factors || []} />
+
+        {/* Finished Weighing Button */}
+        <div className="mt-8 flex justify-end">
+          <a href={allFactorsWeighted ? `/decisions/${params.id}/outcomes` : undefined}>
+            <Button
+              className="bg-green-600 hover:bg-green-700"
+              disabled={!allFactorsWeighted}
+            >
+              I'm finished weighing out my factors
+            </Button>
+          </a>
+        </div>
       </div>
     </main>
   );

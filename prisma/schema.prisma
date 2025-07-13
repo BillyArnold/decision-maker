@@ -68,12 +68,22 @@ model Decision {
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   factors     Factor[]
+  outcomes    Outcome[]
 }
 
 model Factor {
   id         String   @id @default(cuid())
   text       String
   weight     Int?     // 1-5 scale for importance
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  decisionId String
+  decision   Decision @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+}
+
+model Outcome {
+  id         String   @id @default(cuid())
+  text       String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   decisionId String
