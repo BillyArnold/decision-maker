@@ -17,7 +17,7 @@ DATABASE_URL="file:./dev.db"
 
 # NextAuth
 NEXTAUTH_URL="http://localhost:3001"
-NEXTAUTH_SECRET="n97vzCLNsliNDywl9uoYjegYFJitDSbghfN39fKllGg="
+NEXTAUTH_SECRET="testtest"
 
 # Google OAuth (you need to add these)
 GOOGLE_CLIENT_ID=""
