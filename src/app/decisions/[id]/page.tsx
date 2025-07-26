@@ -66,13 +66,18 @@ export default async function DecisionPage({ params }: DecisionPageProps) {
         <FactorsList factors={decision.factors || []} />
 
         {/* Finished Weighing Button */}
-        <div className="mt-8 flex justify-end">
+        <div className="mt-8 flex flex-col items-end gap-4">
           <a href={allFactorsWeighted ? `/decisions/${params.id}/outcomes` : undefined}>
             <Button
               className="bg-green-600 hover:bg-green-700"
               disabled={!allFactorsWeighted}
             >
               I'm finished weighing out my factors
+            </Button>
+          </a>
+          <a href={`/decisions/${params.id}/summary`}>
+            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
+              View Summary
             </Button>
           </a>
         </div>

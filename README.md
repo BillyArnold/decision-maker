@@ -34,3 +34,46 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Roadmap
+
+Here are some planned features and ideas for future development:
+
+- **UI Improvements**
+  - Further tidy up and polish the user interface for a more intuitive and visually appealing experience.
+
+- **Multi-User Decisions**
+  - Allow multiple users to collaborate on the same decision, share factors, outcomes, and ratings.
+
+- **Automatic Review Lookup / Web Scraping**
+  - Integrate web scraping or API-based review lookup to automatically gather relevant information for decisions (e.g., product reviews, destination info).
+
+- **AI-Assisted Decision Overview**
+  - Use AI to analyze decision data and provide smart suggestions, summaries, or highlight potential biases.
+
+- **Export & Share**
+  - Allow users to export their decision summary as PDF or share a link with others for feedback.
+
+- **Comments & Discussion**
+  - Add a comment section for each decision so users (or collaborators) can discuss and provide input.
+
+- **Reminders & Follow-ups**
+  - Let users set reminders to revisit decisions or follow up on outcomes after a certain period.
+
+- **Mobile App / PWA Support**
+  - Make the app installable as a Progressive Web App (PWA) for offline and mobile use.
+
+- **Custom Factor/Outcome Types**
+  - Allow users to add descriptions, images, or links to factors and outcomes for richer context.
+
+- **Decision Confidence Meter**
+  - After rating, show a “confidence” score based on how balanced or lopsided the ratings are.
+
+- **Integration with Calendar/Tasks**
+  - Add decisions or follow-ups to Google Calendar, Outlook, or task management tools.
+
+- **Anonymous/Public Decisions**
+  - Allow users to make some decisions public for community input or to browse public decisions for inspiration.
+
+- **Accessibility Enhancements**
+  - Ensure the app is fully accessible (screen reader support, keyboard navigation, color contrast, etc.).
