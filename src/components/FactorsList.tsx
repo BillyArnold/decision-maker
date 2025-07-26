@@ -85,7 +85,7 @@ export default function FactorsList({ factors }: FactorsListProps) {
                 <button
                   onClick={() => handleDelete(factor.id)}
                   disabled={isPending}
-                  className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-all duration-200"
+                  className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-all duration-200 flex items-center justify-center"
                   aria-label="Delete factor"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -160,9 +160,9 @@ export default function FactorsList({ factors }: FactorsListProps) {
           <div className="text-center">
             <Button 
               onClick={() => setAdding(true)}
-              className="bg-primary hover:bg-primary-dark text-white"
+              className="bg-primary hover:bg-primary-dark text-white flex items-center gap-2"
             >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
               Add a factor

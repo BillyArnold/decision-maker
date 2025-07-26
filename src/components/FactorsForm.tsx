@@ -99,7 +99,7 @@ export default function FactorsForm({ initialFactors }: FactorsFormProps) {
               <button
                 onClick={() => handleDelete(idx)}
                 disabled={isSaving}
-                className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-all duration-200"
+                className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-all duration-200 flex items-center justify-center"
                 aria-label="Delete factor"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

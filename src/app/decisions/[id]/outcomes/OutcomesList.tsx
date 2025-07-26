@@ -70,7 +70,7 @@ export default function OutcomesList({ outcomes }: OutcomesListProps) {
                 <button
                   onClick={() => handleDelete(outcome.id)}
                   disabled={isPending}
-                  className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-all duration-200"
+                  className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-all duration-200 flex items-center justify-center"
                   aria-label="Delete outcome"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -130,9 +130,9 @@ export default function OutcomesList({ outcomes }: OutcomesListProps) {
           <div className="text-center">
             <Button 
               onClick={() => setAdding(true)}
-              className="bg-primary hover:bg-primary-dark text-white"
+              className="bg-primary hover:bg-primary-dark text-white flex items-center gap-2"
             >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
               Add an outcome
@@ -161,8 +161,8 @@ export default function OutcomesList({ outcomes }: OutcomesListProps) {
             {/* Next Step Button */}
             <div className="flex justify-end">
               <a href={`/decisions/${params.id}/rate`}>
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                   Next: Rate Outcomes
