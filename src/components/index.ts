@@ -7,4 +7,5 @@ export { default as Input } from './Input';
 export { default as Checkbox } from './Checkbox';
 export { default as RatingButton } from './RatingButton';
 export { default as ProgressBar } from './ProgressBar';
-export { default as TopBar } from './TopBar'; 
+export { default as TopBar } from './TopBar';
+export { default as HeaderImage } from './HeaderImage'; 

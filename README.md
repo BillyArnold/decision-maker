@@ -39,9 +39,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 Here are some planned features and ideas for future development:
 
-- **UI Improvements**
-  - Further tidy up and polish the user interface for a more intuitive and visually appealing experience.
-
 - **Multi-User Decisions**
   - Allow multiple users to collaborate on the same decision, share factors, outcomes, and ratings.
 
