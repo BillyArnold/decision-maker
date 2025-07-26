@@ -52,7 +52,7 @@ export default async function SummaryPage({ params }: SummaryPageProps) {
     redirect(`/decisions/${id}/rate`);
   }
 
-  // Calculate weighted sum scores for each outcome
+  // Calculate weighted sum scores for each outcome and factor contributions
   const scores = decision.outcomes.map((outcome: any) => {
     let score = 0;
     for (const factor of decision.factors) {
@@ -60,6 +60,20 @@ export default async function SummaryPage({ params }: SummaryPageProps) {
       score += (factor.weight ?? 0) * rating;
     }
     return { id: outcome.id, text: outcome.text, score };
+  });
+
+  // Calculate factor contributions for each outcome
+  const factorContributions: Record<string, any[]> = {};
+  decision.outcomes.forEach((outcome: any) => {
+    factorContributions[outcome.id] = decision.factors.map((factor: any) => {
+      const rating = outcome.ratings.find((r: any) => r.factorId === factor.id)?.rating ?? 0;
+      const contribution = (factor.weight ?? 0) * rating;
+      return {
+        factorId: factor.id,
+        factorName: factor.text,
+        contribution,
+      };
+    });
   });
 
   // Find the highest score(s)
@@ -200,7 +214,11 @@ export default async function SummaryPage({ params }: SummaryPageProps) {
             <p className="text-sm text-gray-500">Bar chart showing relative performance</p>
           </div>
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <OutcomeBarChart scores={scores} />
+            <OutcomeBarChart 
+              scores={scores} 
+              factors={decision.factors}
+              factorContributions={factorContributions}
+            />
           </div>
         </div>
 
