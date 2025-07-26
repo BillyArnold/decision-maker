@@ -42,7 +42,8 @@ export default function FactorsList({ factors }: FactorsListProps) {
 
   return (
     <div className="space-y-4">
-      <Heading size="md" className="mb-4">Factors</Heading>
+      <Heading size="md" className="mb-1">Factors</Heading>
+      <p className="text-gray-text text-sm mb-4">Factors are the things that matter to you in making this decision. For example, if you’re choosing a laptop, factors might be price, battery life, or screen size. Rate how important each factor is to you.</p>
       {factors && factors.length > 0 ? (
         <div className="space-y-3">
           {factors.map((factor) => (

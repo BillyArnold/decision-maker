@@ -192,3 +192,52 @@ export async function updateOutcomeRatings(decisionId: string, ratings: Record<s
 
   return { success: true };
 } 
+
+export async function saveFactors(decisionId: string, factors: { id?: string; text: string; weight: number | null }[]) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated');
+  }
+
+  // Ensure the decision belongs to the user
+  const decision = await prisma.decision.findUnique({
+    where: { id: decisionId, userId: session.user.id },
+    include: { factors: true },
+  });
+  if (!decision) {
+    throw new Error('Decision not found');
+  }
+
+  // Find deleted factors
+  const existingIds = decision.factors.map(f => f.id);
+  const newIds = factors.filter(f => f.id).map(f => f.id);
+  const toDelete = existingIds.filter(id => !newIds.includes(id));
+
+  // Delete removed factors
+  await Promise.all(toDelete.map(id =>
+    prisma.factor.delete({ where: { id } })
+  ));
+
+  // Upsert (add or update) factors
+  await Promise.all(factors.map(factor => {
+    if (factor.id) {
+      // Update
+      return prisma.factor.update({
+        where: { id: factor.id },
+        data: { text: factor.text, weight: factor.weight },
+      });
+    } else {
+      // Create
+      return prisma.factor.create({
+        data: {
+          text: factor.text,
+          weight: factor.weight,
+          decisionId,
+        },
+      });
+    }
+  }));
+
+  revalidatePath(`/decisions/${decisionId}`);
+  return { success: true };
+} 

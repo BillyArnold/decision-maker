@@ -4,7 +4,7 @@ import { prisma } from '../../../lib/prisma';
 import { getServerSession } from 'next-auth';
 import { redirect, notFound } from 'next/navigation';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
-import FactorsList from '../../../components/FactorsList';
+import FactorsForm from '../../../components/FactorsForm';
 
 interface DecisionPageProps {
   params: {
@@ -50,20 +50,10 @@ export default async function DecisionPage({ params }: DecisionPageProps) {
             <Heading size="lg">{decision.title}</Heading>
             <p className="text-gray-text mt-2">Status: {decision.status}</p>
           </div>
-          <div className="flex gap-2">
-            {decision.factors && decision.factors.length > 0 && (
-              <a href={`/decisions/${params.id}/weigh`}>
-                <Button size="sm" className="flex items-center gap-2">
-                  <span className="text-lg">⚖️</span>
-                  Weigh factors
-                </Button>
-              </a>
-            )}
-          </div>
         </div>
 
-        {/* Factors List */}
-        <FactorsList factors={decision.factors || []} />
+        {/* Factors Form (add, edit, weigh, delete) */}
+        <FactorsForm initialFactors={decision.factors || []} />
 
         {/* Finished Weighing Button */}
         <div className="mt-8 flex flex-col items-end gap-4">
@@ -72,7 +62,7 @@ export default async function DecisionPage({ params }: DecisionPageProps) {
               className="bg-green-600 hover:bg-green-700"
               disabled={!allFactorsWeighted}
             >
-              I'm finished weighing out my factors
+              Next: Possible Outcomes
             </Button>
           </a>
           <a href={`/decisions/${params.id}/summary`}>
