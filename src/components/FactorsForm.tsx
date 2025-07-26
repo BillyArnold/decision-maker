@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, Heading } from './index';
+import { Button, Heading, RatingButton } from './index';
 import { saveFactors } from '../app/decisions/[id]/actions';
 import { useRouter, useParams } from 'next/navigation';
 
@@ -47,26 +47,59 @@ export default function FactorsForm({ initialFactors }: FactorsFormProps) {
 
   const allValid = factors.length > 0 && factors.every(f => f.text.trim() && f.weight);
 
+  const getImportanceColor = (weight: number) => {
+    if (weight <= 2) return 'text-blue-600 bg-blue-50';
+    if (weight <= 3) return 'text-green-600 bg-green-50';
+    if (weight <= 4) return 'text-orange-600 bg-orange-50';
+    return 'text-red-600 bg-red-50';
+  };
+
+  const getImportanceLabel = (weight: number) => {
+    if (weight <= 2) return 'Low';
+    if (weight <= 3) return 'Medium';
+    if (weight <= 4) return 'High';
+    return 'Critical';
+  };
+
   return (
-    <div className="space-y-4">
-      <Heading size="md" className="mb-1">Factors</Heading>
-      <p className="text-gray-text text-sm mb-4">Factors are the things that matter to you in making this decision. For example, if you’re choosing a laptop, factors might be price, battery life, or screen size. Rate how important each factor is to you.</p>
-      <div className="space-y-3">
+    <div className="space-y-6">
+      <div>
+        <Heading size="md" className="mb-2">Factors</Heading>
+        <p className="text-gray-text text-sm">
+          Factors are the things that matter to you in making this decision. Rate how important each factor is to you.
+        </p>
+      </div>
+
+      {/* Existing Factors */}
+      <div className="space-y-4">
         {factors.map((factor, idx) => (
-          <div key={factor.id || idx} className="p-3 border border-gray-border rounded-lg bg-gray-50">
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                className="flex-1 border border-gray-border rounded px-2 py-1"
-                value={factor.text}
-                onChange={e => handleEdit(idx, 'text', e.target.value)}
-                placeholder="Factor name"
-                disabled={isSaving}
-              />
+          <div 
+            key={factor.id || idx} 
+            className="group relative bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex-1">
+                <input
+                  type="text"
+                  className="w-full text-lg font-medium text-gray-900 border-none bg-transparent focus:ring-2 focus:ring-primary focus:ring-opacity-50 rounded px-2 py-1 -ml-2"
+                  value={factor.text}
+                  onChange={e => handleEdit(idx, 'text', e.target.value)}
+                  placeholder="Factor name"
+                  disabled={isSaving}
+                />
+                {factor.weight && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImportanceColor(factor.weight)}`}>
+                      {getImportanceLabel(factor.weight)} Importance
+                    </span>
+                    <span className="text-sm text-gray-500">({factor.weight}/5)</span>
+                  </div>
+                )}
+              </div>
               <button
                 onClick={() => handleDelete(idx)}
                 disabled={isSaving}
-                className="text-red-500 hover:text-red-700 p-2 rounded transition-colors"
+                className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-all duration-200"
                 aria-label="Delete factor"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -75,56 +108,87 @@ export default function FactorsForm({ initialFactors }: FactorsFormProps) {
                 </svg>
               </button>
             </div>
-            <div className="flex items-center gap-1 mt-2">
-              <span className="text-xs text-gray-text">Importance</span>
-              {[1,2,3,4,5].map(w => (
-                <label key={w} className="flex items-center gap-1 cursor-pointer">
-                  <input
-                    type="radio"
-                    name={`weight-${idx}`}
-                    value={w}
-                    checked={factor.weight === w}
-                    onChange={() => handleEdit(idx, 'weight', w)}
-                    disabled={isSaving}
-                  />
-                  <span className="text-xs text-gray-text">{w}</span>
-                </label>
-              ))}
+            
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-gray-700">Importance:</span>
+                <div className="flex gap-2">
+                  {[1, 2, 3, 4, 5].map(weight => (
+                    <RatingButton
+                      key={weight}
+                      value={weight}
+                      selected={factor.weight === weight}
+                      onClick={() => handleEdit(idx, 'weight', weight)}
+                      disabled={isSaving}
+                      className="w-8 h-8 text-xs"
+                    />
+                  ))}
+                </div>
+              </div>
+              
+              {factor.weight && (
+                <div className="w-full bg-gray-100 rounded-full h-2">
+                  <div 
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      factor.weight <= 2 ? 'bg-blue-500' :
+                      factor.weight <= 3 ? 'bg-green-500' :
+                      factor.weight <= 4 ? 'bg-orange-500' : 'bg-red-500'
+                    }`}
+                    style={{ width: `${(factor.weight / 5) * 100}%` }}
+                  ></div>
+                </div>
+              )}
             </div>
           </div>
         ))}
       </div>
-      <div className="flex flex-col gap-2 mt-2">
-        <input
-          type="text"
-          className="flex-1 border border-gray-border rounded px-2 py-1"
-          value={newText}
-          onChange={e => setNewText(e.target.value)}
-          placeholder="Add a new factor"
-          disabled={isSaving}
-        />
-        <div className="flex items-center gap-1">
-          <span className="text-xs text-gray-text">Importance</span>
-          {[1,2,3,4,5].map(w => (
-            <label key={w} className="flex items-center gap-1 cursor-pointer">
-              <input
-                type="radio"
-                name="new-weight"
-                value={w}
-                checked={newWeight === w}
-                onChange={() => setNewWeight(w)}
-                disabled={isSaving}
-              />
-              <span className="text-xs text-gray-text">{w}</span>
-            </label>
-          ))}
+
+      {/* Add New Factor */}
+      <div className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-6">
+        <div className="space-y-4">
+          <input
+            type="text"
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
+            value={newText}
+            onChange={e => setNewText(e.target.value)}
+            placeholder="Enter a new factor (e.g., Cost, Quality, Time)"
+            disabled={isSaving}
+          />
+          
+          <div className="space-y-2">
+            <span className="text-sm font-medium text-gray-700">Set importance:</span>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4, 5].map(weight => (
+                <RatingButton
+                  key={weight}
+                  value={weight}
+                  selected={newWeight === weight}
+                  onClick={() => setNewWeight(weight)}
+                  disabled={isSaving}
+                  className="w-10 h-10"
+                />
+              ))}
+            </div>
+          </div>
+          
+          <Button 
+            className="w-fit bg-primary hover:bg-primary-dark text-white" 
+            size="sm" 
+            onClick={handleAdd} 
+            disabled={isSaving || !newText.trim() || !newWeight}
+          >
+            Add Factor
+          </Button>
         </div>
-        <Button className="w-fit" size="sm" onClick={handleAdd} disabled={isSaving || !newText.trim() || !newWeight}>
-          Add
-        </Button>
       </div>
-      <div className="flex justify-end mt-4">
-        <Button onClick={handleSave} disabled={!allValid || isSaving} className="bg-green-600 hover:bg-green-700">
+
+      {/* Save Button */}
+      <div className="flex justify-end pt-4 border-t border-gray-200">
+        <Button 
+          onClick={handleSave} 
+          disabled={!allValid || isSaving} 
+          className="bg-green-600 hover:bg-green-700 text-white px-8 py-3"
+        >
           {isSaving ? 'Saving...' : 'Save Factors'}
         </Button>
       </div>

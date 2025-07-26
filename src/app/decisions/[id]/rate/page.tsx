@@ -72,12 +72,34 @@ export default async function OutcomeRatingPage({ params }: OutcomeRatingPagePro
           <p className="text-gray-text mt-2">Status: {decision.status}</p>
         </div>
 
-        {/* Rating Header */}
-        <div className="mb-8">
-          <Heading size="md">Outcome Rating</Heading>
-          <p className="text-gray-text mt-2">
-            Check the boxes below to help decide how each of the possible outcomes may resonate with the factors for a successful decision
-          </p>
+        {/* Progress Indicator */}
+        <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-start gap-3">
+            <div className="flex items-center justify-center w-6 h-6 bg-blue-600 text-white rounded-full text-sm font-medium">
+              3
+            </div>
+            <div>
+              <p className="text-sm text-blue-800 font-medium">Step 3: Rate Outcomes</p>
+              <p className="text-sm text-blue-700 mt-1">
+                Rate how well each outcome performs against your factors. This will help determine which outcome is the best choice for your decision.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Rating Guide */}
+        <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p className="text-sm text-blue-800 font-medium">Rating Guide</p>
+              <p className="text-sm text-blue-700 mt-1">
+                1 = Poor, 2 = Fair, 3 = Good, 4 = Very Good, 5 = Excellent
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Rating Form */}

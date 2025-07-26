@@ -40,30 +40,52 @@ export default function FactorsList({ factors }: FactorsListProps) {
     });
   }
 
+  const getImportanceColor = (weight: number) => {
+    if (weight <= 2) return 'text-blue-600 bg-blue-50';
+    if (weight <= 3) return 'text-green-600 bg-green-50';
+    if (weight <= 4) return 'text-orange-600 bg-orange-50';
+    return 'text-red-600 bg-red-50';
+  };
+
+  const getImportanceLabel = (weight: number) => {
+    if (weight <= 2) return 'Low';
+    if (weight <= 3) return 'Medium';
+    if (weight <= 4) return 'High';
+    return 'Critical';
+  };
+
   return (
-    <div className="space-y-4">
-      <Heading size="md" className="mb-1">Factors</Heading>
-      <p className="text-gray-text text-sm mb-4">Factors are the things that matter to you in making this decision. For example, if you’re choosing a laptop, factors might be price, battery life, or screen size. Rate how important each factor is to you.</p>
+    <div className="space-y-6">
+      <div>
+        <Heading size="md" className="mb-2">Factors</Heading>
+        <p className="text-gray-text text-sm">
+          Factors are the things that matter to you in making this decision. Rate how important each factor is to you.
+        </p>
+      </div>
+
       {factors && factors.length > 0 ? (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {factors.map((factor) => (
             <div
               key={factor.id}
-              className="p-4 border border-gray-border rounded-lg bg-gray-50"
+              className="group relative bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200"
             >
-              <div className="flex justify-between items-start mb-2">
+              <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <p className="text-gray-text">{factor.text}</p>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">{factor.text}</h3>
                   {factor.weight && (
-                    <p className="text-xs text-yellow-600 mt-1">
-                      Importance: {factor.weight}/5
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getImportanceColor(factor.weight)}`}>
+                        {getImportanceLabel(factor.weight)} Importance
+                      </span>
+                      <span className="text-sm text-gray-500">({factor.weight}/5)</span>
+                    </div>
                   )}
                 </div>
                 <button
                   onClick={() => handleDelete(factor.id)}
                   disabled={isPending}
-                  className="text-red-500 hover:text-red-700 p-2 rounded transition-colors ml-2"
+                  className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-red-50 transition-all duration-200"
                   aria-label="Delete factor"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -72,45 +94,80 @@ export default function FactorsList({ factors }: FactorsListProps) {
                   </svg>
                 </button>
               </div>
+              
               {factor.weight && (
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="bg-yellow-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${(factor.weight / 5) * 100}%` }}
-                  ></div>
+                <div className="mt-4">
+                  <div className="w-full bg-gray-100 rounded-full h-2">
+                    <div 
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        factor.weight <= 2 ? 'bg-blue-500' :
+                        factor.weight <= 3 ? 'bg-green-500' :
+                        factor.weight <= 4 ? 'bg-orange-500' : 'bg-red-500'
+                      }`}
+                      style={{ width: `${(factor.weight / 5) * 100}%` }}
+                    ></div>
+                  </div>
                 </div>
               )}
             </div>
           ))}
         </div>
       ) : (
-        <div className="text-center py-12">
-          <p className="text-gray-text mb-4">No factors added yet</p>
+        <div className="text-center py-12 bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl">
+          <div className="max-w-sm mx-auto">
+            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">No factors yet</h3>
+            <p className="mt-1 text-sm text-gray-500">Get started by adding your first factor.</p>
+          </div>
         </div>
       )}
-      <div className="pt-4">
+
+      {/* Add Factor Section */}
+      <div className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-6">
         {adding ? (
-          <div className="flex gap-2">
+          <div className="space-y-4">
             <input
               type="text"
-              className="border border-gray-border rounded px-3 py-2 flex-1"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent"
               value={input}
               onChange={e => setInput(e.target.value)}
-              placeholder="Enter a factor"
+              placeholder="Enter a factor (e.g., Cost, Quality, Time)"
               autoFocus
               disabled={isPending}
             />
-            <Button size="sm" onClick={handleAdd} disabled={isPending}>
-              {isPending ? 'Adding...' : 'Add'}
-            </Button>
-            <Button size="sm" variant="text" onClick={() => setAdding(false)} disabled={isPending}>
-              Cancel
-            </Button>
+            <div className="flex gap-3">
+              <Button 
+                size="sm" 
+                onClick={handleAdd} 
+                disabled={isPending || !input.trim()}
+                className="bg-primary hover:bg-primary-dark text-white"
+              >
+                {isPending ? 'Adding...' : 'Add Factor'}
+              </Button>
+              <Button 
+                size="sm" 
+                variant="text" 
+                onClick={() => setAdding(false)} 
+                disabled={isPending}
+              >
+                Cancel
+              </Button>
+            </div>
           </div>
         ) : (
-          <Button onClick={() => setAdding(true)}>
-            Add a factor
-          </Button>
+          <div className="text-center">
+            <Button 
+              onClick={() => setAdding(true)}
+              className="bg-primary hover:bg-primary-dark text-white"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Add a factor
+            </Button>
+          </div>
         )}
       </div>
     </div>
